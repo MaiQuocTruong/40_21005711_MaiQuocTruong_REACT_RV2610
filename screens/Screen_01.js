@@ -73,6 +73,20 @@ const Screen_01 = () => {
                     numColumns={numColumns}
                 />
 
+                {/* Popular Destination */}
+                <View style={styles.sectionContainer}>
+                    <Text style={styles.sectionTitle}>Popular Destination</Text>
+                    <Image source={require('../assets/3gach.png')} style={styles.icon3gach}/>
+                </View>
+                <FlatList
+                    data={location.slice(0, 3)}
+                    horizontal
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item }) => (
+                        <Image source={{ uri: item.image }} style={styles.locationImage}/>
+                    )}
+                />
+
                 </ScrollView>
             </View>
         </SafeAreaView>
@@ -199,6 +213,12 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#333',
         textAlign: 'center',
+    },
+    locationImage:{
+        width: 122,
+        height: 122,
+        margin: 10,
+        borderRadius: 10,
     },
 });
 
