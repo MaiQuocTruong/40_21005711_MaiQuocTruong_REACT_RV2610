@@ -87,6 +87,19 @@ const Screen_01 = () => {
                     )}
                 />
 
+                {/* Recommended */}
+                <View style={styles.sectionContainer}>
+                    <Text style={styles.sectionTitle}>Recommended</Text>
+                </View>
+                <FlatList
+                    data={location.slice(3, 5)}
+                    horizontal
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item }) => (
+                        <Image source={{ uri: item.image }} style={styles.locationImageOfRec}/>
+                    )}
+                />
+
                 </ScrollView>
             </View>
         </SafeAreaView>
@@ -219,6 +232,12 @@ const styles = StyleSheet.create({
         height: 122,
         margin: 10,
         borderRadius: 10,
+    },
+    locationImageOfRec:{
+        width: 192,
+        height: 192,
+        borderRadius: 10,
+        margin: 10,
     },
 });
 
