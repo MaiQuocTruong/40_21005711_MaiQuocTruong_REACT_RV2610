@@ -99,8 +99,30 @@ const Screen_01 = () => {
                         <Image source={{ uri: item.image }} style={styles.locationImageOfRec}/>
                     )}
                 />
-
                 </ScrollView>
+
+                {/* Footer or bottom nav */}
+                <View style={styles.bottomNav}>
+                   <TouchableOpacity style={styles.navItem}>
+                       <Image source={require('../assets/homeicon.png')} style={styles.navicon}/>
+                       <Text style={styles.navLabel}>Home</Text>
+                   </TouchableOpacity>
+
+                   <TouchableOpacity style={styles.navItem}>
+                       <Image source={require('../assets/exploreicon.png')} style={styles.navicon}/>
+                       <Text style={styles.navLabel}>Explore</Text>
+                   </TouchableOpacity>
+
+                   <TouchableOpacity style={styles.navItem}>
+                       <Image source={require('../assets/searchicon.png')} style={styles.navicon}/>
+                       <Text style={styles.navLabel}>Search</Text>
+                   </TouchableOpacity>
+
+                   <TouchableOpacity style={styles.navItem}>
+                       <Image source={require('../assets/profileicon.png')} style={styles.navicon}/>
+                       <Text style={styles.navLabel}>Profile</Text>
+                   </TouchableOpacity>
+                </View>
             </View>
         </SafeAreaView>
     );
@@ -238,6 +260,24 @@ const styles = StyleSheet.create({
         height: 192,
         borderRadius: 10,
         margin: 10,
+    },
+    bottomNav:{
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        backgroundColor: '#5958b2',
+        padding: 25,
+    },
+    navItem:{
+        alignItems: 'center',
+    },
+    navLabel:{
+        color: '#fff',
+        fontSize: 14,
+        marginTop: 4,
+    },
+    navicon:{
+        width: 40,
+        height: 40,
     },
 });
 
