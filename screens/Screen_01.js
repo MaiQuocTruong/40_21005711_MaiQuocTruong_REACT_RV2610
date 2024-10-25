@@ -54,6 +54,25 @@ const Screen_01 = () => {
                    </View>
                 </View>
 
+                {/* Categories */}
+                <View style={styles.sectionContainer}>
+                    <Text style={styles.sectionTitle}>Category</Text>
+                    <Image source={require('../assets/3gach.png')} style={styles.icon3gach}/>
+                </View>
+                <FlatList
+                    data={category}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity style={[styles.categoryItem, {width: screenWidth / numColumns }]}>
+                            <View style={styles.categoryIconContainer}>
+                                <Image source={{ uri: item.image }} style={styles.categoryIcon}/>
+                            </View>
+                            <Text style={styles.categoryText}>{item.name}</Text>
+                        </TouchableOpacity>
+                    )}
+                    numColumns={numColumns}
+                />
+
                 </ScrollView>
             </View>
         </SafeAreaView>
@@ -140,6 +159,46 @@ const styles = StyleSheet.create({
     iconBell:{
         width: 50,
         height: 50
+    },
+    sectionContainer:{
+        padding: 20,
+        paddingLeft: 10,
+        paddingRight: 30,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    sectionTitle:{
+        fontSize: 20,
+        margin: 10,
+        textAlign: 'left',
+    },
+    icon3gach:{
+        width: 30,
+        height: 30,
+    },
+    categoryItem:{
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginVertical: 10,
+    },
+    categoryIconContainer: {
+        width: 64,
+        height: 64,
+        borderRadius: 32,
+        backgroundColor: '#6C63FF',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    categoryIcon:{
+        width: 64,
+        height: 64,
+    },
+    categoryText:{
+        marginTop: 8,
+        fontSize: 14,
+        color: '#333',
+        textAlign: 'center',
     },
 });
 
