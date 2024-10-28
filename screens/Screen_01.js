@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, Image, StyleSheet, ScrollView, TouchableOpacity, Dimensions, SafeAreaView, Platform, TextInput } from 'react-native';
 import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 
 const Screen_01 = () => {
     const [category, setCategory] = useState([]);
     const [location, setLocation] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchFocused, setSearchFocused] = useState(false);
+    const navigation = useNavigation();
 
     const screenWidth = Dimensions.get('window').width;
 
     useEffect(() => {
-       axios.get('https://671ba9d92c842d92c380d3a1.mockapi.io/category').then((response) => {
-        setCategory(response.data);
-       });
-       axios.get('https://671ba9d92c842d92c380d3a1.mockapi.io/location').then((response) => {
-        setLocation(response.data);
-       });
+        axios.get('http://localhost:3001/category').then((response) => {
+         setCategory(response.data);
+        });
+        axios.get('http://localhost:3001/location').then((response) => {
+         setLocation(response.data);
+        });
     }, []);
 
     const numColumns = 4;
@@ -42,6 +44,7 @@ const Screen_01 = () => {
                       </View>
                    </View>
 
+                   {/* User info */}
                    <View style={styles.userInfoContainer}>
                      <View style={styles.userInfo}>
                         <Image source={require('../assets/personicon.png')} style={styles.userImage}/>
@@ -52,6 +55,7 @@ const Screen_01 = () => {
                      </View>
                      <Image source={require('../assets/ringicon.png')} style={styles.iconBell}/>
                    </View>
+                   
                 </View>
 
                 {/* Categories */}
