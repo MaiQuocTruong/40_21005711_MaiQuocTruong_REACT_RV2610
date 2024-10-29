@@ -13,10 +13,10 @@ const Screen_01 = () => {
     const screenWidth = Dimensions.get('window').width;
 
     useEffect(() => {
-        axios.get('http://localhost:3001/category').then((response) => {
+        axios.get('http://192.168.100.9:3001/category').then((response) => {
          setCategory(response.data);
         });
-        axios.get('http://localhost:3001/location').then((response) => {
+        axios.get('http://192.168.100.9:3001/location').then((response) => {
          setLocation(response.data);
         });
     }, []);

@@ -35,7 +35,7 @@ export default function LoginScreen() {
   // Hàm xử lý khi nhấn nút Login
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/login', {
+      const response = await axios.post('http://192.168.100.9:3001/login', {
         username,
         password,
       });
@@ -106,10 +106,7 @@ export default function LoginScreen() {
           onFocus={() => setIsPasswordFocused(true)}
           onBlur={() => setIsPasswordFocused(false)}
         />
-        <TouchableOpacity
-          onPress={togglePasswordVisibility}
-          style={styles.showPasswordIcon}
-        >
+        <TouchableOpacity onPress={togglePasswordVisibility} style={styles.showPasswordIcon}>
           <MaterialIcons
             name={isPasswordVisible ? "visibility-off" : "visibility"}
             size={24}
@@ -136,7 +133,7 @@ export default function LoginScreen() {
           <Text style={styles.checkboxLabel}>Remember Me</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.forgotPassword}>
+        <TouchableOpacity style={styles.forgotPassword} onPress={() => navigation.navigate("ForgetPassScreen")}>
           <Text style={styles.linkText}>Forgot Password?</Text>
         </TouchableOpacity>
       </View>

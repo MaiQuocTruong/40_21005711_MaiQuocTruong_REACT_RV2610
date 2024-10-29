@@ -7,15 +7,27 @@ const path = require('path');
 
 const app = express();
 app.use(cors());
-app.use(express.json()); // Xử lý dữ liệu JSON từ các yêu cầu
+app.use('/uploads', express.static('uploads'));
+
+// Setup multer for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); // Define the upload directory
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname)); // Use timestamp as filename
+    }
+});
+
+const upload = multer({ storage });
 
 // MySQL connection setup
 const db = mysql.createConnection({
-    host: '127.0.0.1',  // hoặc 'localhost'
-    port: 3306,          // cổng mặc định của MySQL
-    user: 'root',        // tên đăng nhập root của MySQL
-    password: '123456789',  // thay thế bằng mật khẩu của bạn
-    database: 'category_location'   // thay thế bằng tên database của bạn
+    host: '127.0.0.1',  // or 'localhost'
+    port: 3306,          // default MySQL port
+    user: 'root',        // your MySQL root username
+    password: '123456789',  // replace 'your_password' with your actual root password
+    database: 'category_location'   // replace 'your_database' with the name of your database
 });
 
 db.connect((err) => {
@@ -23,17 +35,7 @@ db.connect((err) => {
     console.log('MySQL Connected...');
 });
 
-// Cấu hình lưu trữ của multer cho upload file
-const storage = multer.diskStorage({
-    destination: './uploads',  // thư mục lưu ảnh
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}_${file.originalname}`);
-    }
-});
-
-const upload = multer({ storage: storage });
-
-// Endpoint để lấy danh sách categories
+// Endpoint to fetch categories
 app.get('/category', (req, res) => {
     const query = 'SELECT * FROM category';
     db.query(query, (err, result) => {
@@ -42,7 +44,7 @@ app.get('/category', (req, res) => {
     });
 });
 
-// Endpoint để lấy danh sách locations
+// Endpoint to fetch locations
 app.get('/location', (req, res) => {
     const query = 'SELECT * FROM location';
     db.query(query, (err, result) => {
@@ -51,8 +53,8 @@ app.get('/location', (req, res) => {
     });
 });
 
-// Endpoint xử lý đăng nhập
-app.post('/login', (req, res) => {
+// Endpoint to handle login
+app.post('/login', express.json(), (req, res) => {
     const { username, password } = req.body;
     const query = 'SELECT * FROM Account WHERE username = ? AND password = ?';
     db.query(query, [username, password], (err, result) => {
@@ -67,22 +69,23 @@ app.post('/login', (req, res) => {
     });
 });
 
-// Endpoint xử lý đăng ký và upload hình ảnh
+// Endpoint to handle user registration with image upload
 app.post('/register', upload.single('avatar'), (req, res) => {
     const { username, password } = req.body;
-    const avatar = req.file ? req.file.filename : null; // tên file ảnh được lưu
+    const avatar = req.file ? req.file.filename : null; // Get the uploaded file's name
 
-    // Kiểm tra xem username đã tồn tại chưa
+    // Check if username already exists
     const checkQuery = 'SELECT * FROM Account WHERE username = ?';
     db.query(checkQuery, [username], (err, result) => {
-        if (err) return res.status(500).json({ error: 'Database error' });
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
         
         if (result.length > 0) {
-            // Nếu username đã tồn tại, trả về mã 409 và thông báo lỗi
             return res.status(409).json({ error: 'Username already exists' });
         }
 
-        // Nếu username chưa tồn tại, thực hiện chèn dữ liệu vào bảng Account
+        // Insert user into the database
         const insertQuery = 'INSERT INTO Account (username, password, avatar) VALUES (?, ?, ?)';
         db.query(insertQuery, [username, password, avatar], (err, result) => {
             if (err) {
@@ -93,10 +96,34 @@ app.post('/register', upload.single('avatar'), (req, res) => {
     });
 });
 
-// Thiết lập thư mục 'uploads' là công khai để có thể truy cập ảnh
-app.use('/uploads', express.static(path.join(__dirname, './uploads')));
+// Endpoint để đổi mật khẩu
+app.put('/reset-password', express.json(), (req, res) => {
+    const { username, password } = req.body;
 
-// Khởi động server tại cổng 3001
+    // Kiểm tra xem username có tồn tại trong cơ sở dữ liệu không
+    const checkQuery = 'SELECT * FROM Account WHERE username = ?';
+    db.query(checkQuery, [username], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        // Nếu username không tồn tại
+        if (result.length === 0) {
+            return res.status(404).json({ message: 'Username does not exist' });
+        }
+
+        // Cập nhật mật khẩu mới
+        const updateQuery = 'UPDATE Account SET password = ? WHERE username = ?';
+        db.query(updateQuery, [password, username], (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: 'Database error' });
+            }
+            res.json({ message: 'Password reset successful' });
+        });
+    });
+});
+
+
 app.listen(3001, () => {
     console.log('Server running on port 3001');
 });

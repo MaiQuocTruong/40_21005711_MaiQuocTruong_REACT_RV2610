@@ -1,11 +1,11 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Screen_00 from './screens/Screen_00';
 import Screen_01 from './screens/Screen_01';
 import LoginScreen from './screens/LoginScreen';
 import SignUpScreen from './screens/SignUpScreen';
-
+import ProfileScreen from './screens/ProfileScreen';
+import ForgetPassScreen from './screens/ForgetPassScreen';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -33,6 +33,16 @@ export default function App() {
         <Stack.Screen 
           name="SignUpScreen" 
           component={SignUpScreen} 
+          options={{ headerShown: false }} // Ẩn header cho màn hình đăng nhập
+        />
+        <Stack.Screen 
+          name="ProfileScreen" 
+          component={ProfileScreen} 
+          options={{ headerShown: false }} // Ẩn header cho màn hình đăng nhập
+        />
+        <Stack.Screen 
+          name="ForgetPassScreen" 
+          component={ForgetPassScreen} 
           options={{ headerShown: false }} // Ẩn header cho màn hình đăng nhập
         />
       </Stack.Navigator>
