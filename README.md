@@ -1,4 +1,4 @@
-# ![Logo](./assets/logo.png) 
+# ![Logo](./assets/Data/24eveil_14.png) 
 <h1><img src="https://emojis.slackmojis.com/emojis/images/1531849430/4246/blob-sunglasses.gif?1531849430" width="30"/> 40 - 21005711 - Mai Quốc Trưởng - REACT - REVIEW 30/10/2024</h1>
 
 > **React Lập Trình Thiết Bị Di Động**
