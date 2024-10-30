@@ -22,9 +22,7 @@
 - [Cài Đặt](#cài-đặt)
 - [API MySQL](#api)
 - [Chạy Ứng Dụng](#chạy-ứng-dụng)
-- [Cấu Trúc Dự Án](#cấu-trúc-dự-án)
 - [Sử Dụng](#sử-dụng)
-- [Modals](#modals)
 - [Liên Hệ](#liên-hệ)
 
 ---
@@ -33,7 +31,7 @@
 
 Bài tập. Đây là ứng dụng cho phép người dùng thêm, xóa, sửa user.
 
-![App Demo and Tutorial](https://www.youtube.com/watch?v=gJF00uVYjuI)
+Youtube: (https://www.youtube.com/watch?v=gJF00uVYjuI)
 
 ---
 
