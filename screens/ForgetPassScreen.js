@@ -10,7 +10,7 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
-import axios from 'axios'; // Đảm bảo bạn đã cài axios
+import axios from 'axios';
 
 export default function ForgetPassScreen() {
   const navigation = useNavigation();
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     left: 20,
   },
   title: {
-    fontSize: 32,
+    fontSize: 34,
     color: "#333333",
     marginBottom: 12,
     textAlign: "center",

@@ -1,36 +1,57 @@
-import React from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import axios from 'axios';
 
 const ProfileScreen = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const user = route.params?.user;
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete('http://192.168.100.9:3001/delete-account', {
+        data: { username: user.username }
+      });
+
+      if (response.status === 200) {
+        setModalMessage(response.data.message);
+        setModalVisible(true);
+      }
+    } catch (error) {
+      setModalMessage(error.response ? error.response.data.message : 'An error occurred');
+      setModalVisible(true);
+    }
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    navigation.navigate("LoginScreen");
+  };
+
   return (
     <View style={styles.container}>
-      <Ionicons name="arrow-back" size={24} color="black" style={styles.backIcon} />
+      <Ionicons name="arrow-back" size={24} color="black" style={styles.backIcon} onPress={() => navigation.goBack()} />
       <Text style={styles.title}>Profile</Text>
-      <Ionicons name="settings-outline" size={24} color="black" style={styles.settingsIcon} />
 
       <View style={styles.profileImageContainer}>
         <Image
-          source={require('../assets/Data/ava1.png')}
+          source={user && user.avatar ? { uri: `http://192.168.100.9:3001/uploads/${user.avatar}` } : require('../assets/Data/ava1.png')}
           style={styles.profileImage}
         />
       </View>
-      <Text style={styles.name}>Kim Jennie</Text>
-      <Text style={styles.role}>Artist</Text>
+      <Text style={styles.name}>{user.username}</Text>
 
       <View style={styles.infoContainer}>
-        <Text style={styles.label}>Email</Text>
-        <TextInput style={styles.input} value="kim.jennie@gmail.com" editable={false} />
-
-        <Text style={styles.label}>Phone Number</Text>
-        <TextInput style={styles.input} value="+6281234567890" editable={false} />
-
-        <Text style={styles.label}>Website</Text>
-        <TextInput style={styles.input} value="www.blackpink.com" editable={false} />
+        <Text style={styles.label}>Username</Text>
+        <TextInput style={styles.input} value={user.username} editable={false} />
 
         <Text style={styles.label}>Password</Text>
         <View style={styles.passwordContainer}>
-          <TextInput style={styles.input} value="********" secureTextEntry editable={false} />
+          <TextInput style={styles.input} value={user.password} secureTextEntry editable={false} />
           <Ionicons name="eye-off-outline" size={20} color="black" />
         </View>
       </View>
@@ -38,6 +59,27 @@ const ProfileScreen = () => {
       <TouchableOpacity style={styles.logoutButton}>
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+        <Text style={styles.deleteText}>Delete Account</Text>
+      </TouchableOpacity>
+
+      {/* Modal giống LoginScreen */}
+      <Modal
+        transparent={true}
+        visible={isModalVisible}
+        animationType="slide"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalMessage}>{modalMessage}</Text>
+            <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
+              <Text style={styles.modalButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -52,11 +94,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 40,
     left: 20,
-  },
-  settingsIcon: {
-    position: 'absolute',
-    top: 40,
-    right: 20,
   },
   title: {
     fontSize: 20,
@@ -79,11 +116,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginTop: 10,
-  },
-  role: {
-    fontSize: 16,
-    color: 'gray',
-    marginBottom: 20,
   },
   infoContainer: {
     width: '90%',
@@ -119,7 +151,47 @@ const styles = StyleSheet.create({
   logoutText: {
     color: 'white',
     fontSize: 16,
-  }
+  },
+  deleteButton: {
+    marginTop: 10,
+    width: '90%',
+    padding: 15,
+    backgroundColor: 'transparent',
+    borderColor: '#FF5A5F',
+    borderWidth: 1,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  deleteText: {
+    color: '#FF5A5F',
+    fontSize: 16,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: 300,
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalMessage: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  modalButton: {
+    padding: 10,
+    backgroundColor: '#007AFF',
+    borderRadius: 5,
+  },
+  modalButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 });
 
 export default ProfileScreen;

@@ -15,7 +15,7 @@ export default function App() {
         <Stack.Screen 
           name="LoginScreen" 
           component={LoginScreen} 
-          options={{ headerShown: false }} // Ẩn header cho màn hình đăng nhập
+          options={{ headerShown: false }} 
         />
         <Stack.Screen 
           name="Screen_01" 
@@ -33,17 +33,17 @@ export default function App() {
         <Stack.Screen 
           name="SignUpScreen" 
           component={SignUpScreen} 
-          options={{ headerShown: false }} // Ẩn header cho màn hình đăng nhập
+          options={{ headerShown: false }}
         />
         <Stack.Screen 
           name="ProfileScreen" 
           component={ProfileScreen} 
-          options={{ headerShown: false }} // Ẩn header cho màn hình đăng nhập
+          options={{ headerShown: false }} 
         />
         <Stack.Screen 
           name="ForgetPassScreen" 
           component={ForgetPassScreen} 
-          options={{ headerShown: false }} // Ẩn header cho màn hình đăng nhập
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

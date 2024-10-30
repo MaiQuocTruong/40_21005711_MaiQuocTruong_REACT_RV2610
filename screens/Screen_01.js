@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, Image, StyleSheet, ScrollView, TouchableOpacity, Dimensions, SafeAreaView, Platform, TextInput } from 'react-native';
 import axios from 'axios';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const Screen_01 = () => {
+    const route = useRoute();
+    const user = route.params?.user;
     const [category, setCategory] = useState([]);
     const [location, setLocation] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -47,10 +49,13 @@ const Screen_01 = () => {
                    {/* User info */}
                    <View style={styles.userInfoContainer}>
                      <View style={styles.userInfo}>
-                        <Image source={require('../assets/personicon.png')} style={styles.userImage}/>
+                        <Image 
+                            source={user && user.avatar ? { uri: `http://192.168.100.9:3001/uploads/${user.avatar}` } : require('../assets/personicon.png')} 
+                            style={styles.userImage} 
+                        />
                         <View>
                             <Text style={styles.welcomeText}>Welcome!</Text>
-                            <Text style={styles.userName}>Donna Stroupe</Text>
+                            <Text style={styles.userName}>{user ? user.username : "Guest"}</Text>
                         </View>
                      </View>
                      <Image source={require('../assets/ringicon.png')} style={styles.iconBell}/>
@@ -122,7 +127,7 @@ const Screen_01 = () => {
                        <Text style={styles.navLabel}>Search</Text>
                    </TouchableOpacity>
 
-                   <TouchableOpacity style={styles.navItem}>
+                   <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('ProfileScreen', { user })}>
                        <Image source={require('../assets/profileicon.png')} style={styles.navicon}/>
                        <Text style={styles.navLabel}>Profile</Text>
                    </TouchableOpacity>

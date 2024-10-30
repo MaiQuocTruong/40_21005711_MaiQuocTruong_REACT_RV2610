@@ -12,10 +12,10 @@ app.use('/uploads', express.static('uploads'));
 // Setup multer for file uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/'); // Define the upload directory
+        cb(null, 'uploads/'); 
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname)); // Use timestamp as filename
+        cb(null, Date.now() + path.extname(file.originalname)); 
     }
 });
 
@@ -23,11 +23,11 @@ const upload = multer({ storage });
 
 // MySQL connection setup
 const db = mysql.createConnection({
-    host: '127.0.0.1',  // or 'localhost'
-    port: 3306,          // default MySQL port
-    user: 'root',        // your MySQL root username
-    password: '123456789',  // replace 'your_password' with your actual root password
-    database: 'category_location'   // replace 'your_database' with the name of your database
+    host: '127.0.0.1',  // địa chỉ localhost của mysql
+    port: 3306,          // MySQL port
+    user: 'root',        // username của mysql
+    password: '123456789',  // password của mysql
+    database: 'category_location'   // database
 });
 
 db.connect((err) => {
@@ -53,7 +53,7 @@ app.get('/location', (req, res) => {
     });
 });
 
-// Endpoint to handle login
+// Endpoint để đăng nhập
 app.post('/login', express.json(), (req, res) => {
     const { username, password } = req.body;
     const query = 'SELECT * FROM Account WHERE username = ? AND password = ?';
@@ -69,12 +69,12 @@ app.post('/login', express.json(), (req, res) => {
     });
 });
 
-// Endpoint to handle user registration with image upload
+// Endpoint để đăng ký tài khoản
 app.post('/register', upload.single('avatar'), (req, res) => {
     const { username, password } = req.body;
-    const avatar = req.file ? req.file.filename : null; // Get the uploaded file's name
+    const avatar = req.file ? req.file.filename : null; 
 
-    // Check if username already exists
+    // kiểm tra username có tồn tại hay chưa
     const checkQuery = 'SELECT * FROM Account WHERE username = ?';
     db.query(checkQuery, [username], (err, result) => {
         if (err) {
@@ -85,7 +85,7 @@ app.post('/register', upload.single('avatar'), (req, res) => {
             return res.status(409).json({ error: 'Username already exists' });
         }
 
-        // Insert user into the database
+        // thêm user vào database
         const insertQuery = 'INSERT INTO Account (username, password, avatar) VALUES (?, ?, ?)';
         db.query(insertQuery, [username, password, avatar], (err, result) => {
             if (err) {
@@ -119,6 +119,34 @@ app.put('/reset-password', express.json(), (req, res) => {
                 return res.status(500).json({ error: 'Database error' });
             }
             res.json({ message: 'Password reset successful' });
+        });
+    });
+});
+
+
+// Endpoint để xóa tài khoản
+app.delete('/delete-account', express.json(), (req, res) => {
+    const { username } = req.body;
+
+    // Kiểm tra xem username có tồn tại không
+    const checkQuery = 'SELECT * FROM Account WHERE username = ?';
+    db.query(checkQuery, [username], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        // Nếu không tìm thấy tài khoản
+        if (result.length === 0) {
+            return res.status(404).json({ message: 'Username does not exist' });
+        }
+
+        // Xóa tài khoản
+        const deleteQuery = 'DELETE FROM Account WHERE username = ?';
+        db.query(deleteQuery, [username], (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: 'Database error' });
+            }
+            res.json({ message: 'Account deleted successfully' });
         });
     });
 });

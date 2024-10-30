@@ -6,7 +6,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  Modal
+  Modal,
+  ScrollView
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -71,7 +72,7 @@ export default function LoginScreen() {
       style={styles.container}
     >
       <Image
-        source={{uri: "https://download.logo.wine/logo/Converse_(shoe_company)/Converse_(shoe_company)-Icon-Logo.wine.png",}}
+        source={require('../assets/Data/24eveil_14.png')}
         style={styles.logo}
       />
       <Text style={styles.title}>Get Start Now</Text>
@@ -201,13 +202,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8F8F8",
   },
   logo: {
-    width: 100,
-    height: 100,
+    width: 350,
+    height: 130,
     alignSelf: "center",
-    marginBottom: 30,
+    resizeMode: 'contain',
   },
   title: {
-    fontSize: 36,
+    fontSize: 34,
     color: "#333333",
     marginBottom: 12,
     textAlign: "center",
