@@ -32,6 +32,10 @@ const ProfileScreen = () => {
     navigation.navigate("LoginScreen");
   };
 
+  const handleLogout = () => {
+    navigation.navigate("LoginScreen");
+  };
+
   return (
     <View style={styles.container}>
       <Ionicons name="arrow-back" size={24} color="black" style={styles.backIcon} onPress={() => navigation.goBack()} />
@@ -56,7 +60,7 @@ const ProfileScreen = () => {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.logoutButton}>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
 
