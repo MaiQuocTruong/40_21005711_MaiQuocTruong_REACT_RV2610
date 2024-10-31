@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     Image,
     Modal,
+    Platform
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -24,64 +25,84 @@ export default function SignUpScreen() {
     const [errorMessage, setErrorMessage] = useState('');
     const [isModalVisible, setModalVisible] = useState(false);
     const [imageUri, setImageUri] = useState(null);
+    const [imageFile, setImageFile] = useState(null);
 
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
 
     const handleImagePicker = async () => {
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
+      if (Platform.OS === 'web') {
+          const input = document.createElement('input');
+          input.type = 'file';
+          input.accept = 'image/*';
+          input.onchange = (event) => {
+              const file = event.target.files[0];
+              if (file) {
+                  setImageUri(URL.createObjectURL(file)); // Để hiển thị ảnh trên web
+                  setImageFile(file); // Để upload lên server
+              }
+          };
+          input.click();
+      } else {
+          const result = await ImagePicker.launchImageLibraryAsync({
+              mediaTypes: ImagePicker.MediaTypeOptions.Images,
+              allowsEditing: true,
+              aspect: [4, 3],
+              quality: 1,
+          });
 
-        if (!result.canceled) {
-            setImageUri(result.assets[0].uri);
-        }
-    };
+          if (!result.canceled) {
+              setImageUri(result.assets[0].uri);
+              setImageFile({
+                  uri: result.assets[0].uri,
+                  type: 'image/png', // type của ảnh
+                  name: 'avatar.png', // tên file
+              });
+          }
+      }
+  };
 
-    const handleRegister = async () => {
-        if (!username || !password || !imageUri) {
-            setErrorMessage("Vui lòng nhập đầy đủ thông tin.");
-            setModalVisible(true);
-            return;
-        }
+  const handleRegister = async () => {
+      if (!username || !password || !imageUri) {
+          setErrorMessage("Vui lòng nhập đầy đủ thông tin.");
+          setModalVisible(true);
+          return;
+      }
 
-        const formData = new FormData();
-        formData.append('username', username);
-        formData.append('password', password);
-        formData.append('avatar', {
-            uri: imageUri,
-            type: 'image/png', // or the type of the image you are using
-            name: 'avatar.png', // change the name accordingly
-        });
+      const formData = new FormData();
+      formData.append('username', username);
+      formData.append('password', password);
+      if (Platform.OS === 'web') {
+          formData.append('avatar', imageFile);
+      } else {
+          formData.append('avatar', imageFile);
+      }
 
-        try {
-            const response = await axios.post('http://192.168.100.9:3001/register', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
+      try {
+          const response = await axios.post('http://192.168.100.90:3001/register', formData, {
+              headers: {
+                  'Content-Type': 'multipart/form-data',
+              },
+          });
 
-            if (response.status === 201) {
-                setErrorMessage("");  // Đăng ký thành công
-                setModalVisible(true);
-            }
-        } catch (error) {
-            if (error.response) {
-                if (error.response.status === 409) {
-                    setErrorMessage('Username đã tồn tại');
-                } else {
-                    setErrorMessage(error.response.data.error || 'Registration failed');
-                }
-            } else {
-                setErrorMessage('Network error');
-            }
-            setModalVisible(true);
-        }
-    };
+          if (response.status === 201) {
+              setErrorMessage("");  // Đăng ký thành công
+              setModalVisible(true);
+          }
+      } catch (error) {
+          if (error.response) {
+              if (error.response.status === 409) {
+                  setErrorMessage('Username đã tồn tại');
+              } else {
+                  setErrorMessage(error.response.data.error || 'Registration failed');
+              }
+          } else {
+              setErrorMessage('Network error');
+          }
+          setModalVisible(true);
+      }
+  };
 
     return (
         <LinearGradient

@@ -15,10 +15,10 @@ const Screen_01 = () => {
     const screenWidth = Dimensions.get('window').width;
 
     useEffect(() => {
-        axios.get('http://192.168.100.9:3001/category').then((response) => {
+        axios.get('http://192.168.100.90:3001/category').then((response) => {
          setCategory(response.data);
         });
-        axios.get('http://192.168.100.9:3001/location').then((response) => {
+        axios.get('http://192.168.100.90:3001/location').then((response) => {
          setLocation(response.data);
         });
     }, []);
@@ -50,7 +50,7 @@ const Screen_01 = () => {
                    <View style={styles.userInfoContainer}>
                      <View style={styles.userInfo}>
                         <Image 
-                            source={user && user.avatar ? { uri: `http://192.168.100.9:3001/uploads/${user.avatar}` } : require('../assets/personicon.png')} 
+                            source={user && user.avatar ? { uri: `http://192.168.100.90:3001/uploads/${user.avatar}` } : require('../assets/personicon.png')} 
                             style={styles.userImage} 
                         />
                         <View>

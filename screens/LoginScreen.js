@@ -36,7 +36,7 @@ export default function LoginScreen() {
   // Hàm xử lý khi nhấn nút Login
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://192.168.100.9:3001/login', {
+      const response = await axios.post('http://192.168.100.90:3001/login', {
         username,
         password,
       });

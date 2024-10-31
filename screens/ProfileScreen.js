@@ -13,7 +13,7 @@ const ProfileScreen = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await axios.delete('http://192.168.100.9:3001/delete-account', {
+      const response = await axios.delete('http://192.168.100.90:3001/delete-account', {
         data: { username: user.username }
       });
 
@@ -43,7 +43,7 @@ const ProfileScreen = () => {
 
       <View style={styles.profileImageContainer}>
         <Image
-          source={user && user.avatar ? { uri: `http://192.168.100.9:3001/uploads/${user.avatar}` } : require('../assets/Data/ava1.png')}
+          source={user && user.avatar ? { uri: `http://192.168.100.90:3001/uploads/${user.avatar}` } : require('../assets/Data/ava1.png')}
           style={styles.profileImage}
         />
       </View>
